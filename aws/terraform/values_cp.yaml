@@ -1,0 +1,24 @@
+mach5ImagePullSecret:
+  dockerconfigjson: "CHANGE_ME"
+
+kube-image-keeper:
+  registry:
+    env:
+      - name: blobdescriptorsize
+        value: 1000
+    persistence:
+      accessModes: ReadWriteOnce
+      enabled: true
+      storageClass: gp2
+      size: 75Gi
+    nodeSelector:
+      mach5-main-role: "true"
+  controllers:
+    nodeSelector:
+      mach5-main-role: "true"
+  proxy:
+    podAnnotations:
+      "cluster-autoscaler.kubernetes.io/enable-ds-eviction": "true"
+  fullnameOverride: "cache-proxy"
+
+ 

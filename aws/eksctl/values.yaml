@@ -1,0 +1,182 @@
+mach5ImagePullSecret:
+  createSecretResources: false
+  dockerconfigjson: ""
+keycloak:
+  master:
+    username: ""
+    password: ""
+metadatadb:
+  name: "postgres"
+  host: "postgresdb"
+  port: "5432"
+  sslmode: "disable"
+  user: "postgres"
+  password: 
+  externalPostgresdb: false
+  pvc:
+    storageclass: "gp2"
+  emptydir:
+    enabled: false
+  nodeassignment:
+    enabled: true
+mediator:
+  nodeassignment:
+    enabled: true
+  replicaCount: 1
+  existingClaim: false
+  cstoreSegmentCache:
+    enabled: true
+  loglevel: info
+  useGcpInstanceMetadata: false
+  cstoreCachefs:
+    rcachepvsize: "8589934592" #8GB
+    pvsize: "8589934592" #8GB
+  resourceLimit:
+    enabled: false
+cstorecacheserver:
+  env:
+    enableEviction: true
+pvc:
+  storageclass: "gp2"
+teleportcollector:
+  nodeassignment:
+    enabled: true
+  useGcpInstanceMetadata: "false"
+mediatorwarehousecontroller:
+  nodeassignment:
+    enabled: true
+  workernodeselector:
+    enabled: true
+  headnodeselector:
+    enabled: true
+  customnode:
+    enabled: true
+    workerresource:
+      mediator:
+        memory: "4294967296" # 4GB
+    headresource:
+      ir:
+        memory: "1073741824" # 1GB
+      os:
+        memory: "4294967296" # 4GB
+      osd:
+        memory: "1073741824" # 1GB
+      mdx:
+        memory: "1073741824" # 1GB
+mediatorcompactorcontroller:
+  nodeassignment:
+    enabled: true
+  compactornodeselector:
+    enabled: true
+  cstoreCachefs:
+    rcachepvsize: "1073741824" #1GB
+    pvsize: "1288490189" #1.2GB
+  compaction_resources:
+    #enabled: true
+    max_compaction_memory:
+      enabled: true
+      value: "536870912" # 512M
+    limits:
+      memory:
+        enabled: true
+        value: "2048Mi"
+  delete_compaction_resources:
+    limits:
+      memory:
+        enabled: true
+        value: "2048Mi"
+  finalize_compaction_resources:
+    limits:
+      memory:
+        enabled: true
+        value: "2048Mi"
+mediatoringestorcontroller:
+  nodeassignment:
+    enabled: true
+  ingestornodeselector:
+    enabled: true
+  cstoreCachefs:
+    mountroot: /cachefs
+    rcachepv: /ingest
+    rcachepvsize: "1073741824" #1GB
+    pvsize: "1288490189" #1.2GB
+  ingestion_resources:
+    limits:
+      memory:
+        enabled: true
+        value: "2048Mi"
+nginx:
+  nodeassignment:
+    enabled: true
+  loadBalancerInternal: "true"
+  loadBalancerSourceRanges:
+    - "0.0.0.0/0"
+  awsElbHttps:
+    enabled: false
+    sslCertARN: arn:aws:iam::user:server-certificate/id # Add ACM's ARN
+argo-workflows:
+  # -- Keep CRDs on chart uninstall
+  crds:
+    install: true
+    keep: false
+prometheus:
+  enabled: false
+  retentionSize: "8GB"
+  server:
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+    service:
+      type: LoadBalancer
+      loadBalancerSourceRanges: ["0.0.0.0/0"] # Change this to your CIDR
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+mdserver:
+  metering:
+    enabled: true
+  nodeassignment:
+    enabled: true
+meteringserver:
+  nodeassignment:
+    enabled: true
+metricsserver:
+  nodeassignment:
+    enabled: true
+msearchserver:
+  nodeassignment:
+    enabled: true
+cstorecacheserver:
+  nodeassignment:
+    enabled: true
+  pvc:
+    name: "ccs-ssd"
+    size: "10Gi" # 10GB 
+cstoretxnrelayserver:
+  nodeassignment:
+    enabled: true
+dataexplorer:
+  nodeassignment:
+    enabled: true
+mediatormaterializedviewcontroller:
+  nodeassignment:
+    enabled: true
+  cstoreCachefs:
+    rcachepv: /rcache
+    rcachepvsize: "6442450944" #6GB
+    pvsize: "6657199309" #6.2GB
+  mv_resources:
+    limits:
+      memory:
+        enabled: true
+        value: 2048Mi
+  ingestornodeselector:
+    enabled: true
+otel:
+  nodeassignment:
+    enabled: true
+mediatorindexrouter:
+  nodeassignment:
+    enabled: true
+serviceAccount:
+  create: false
+  name: 

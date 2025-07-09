@@ -1,0 +1,26 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: "mach5-cluster"
+  region: "us-east-1"
+  version: "1.32"
+managedNodeGroups:
+  - name: mach5-node-groups
+    labels: {role: worker}
+    instanceType: t3a.xlarge
+    desiredCapacity: 1
+    volumeSize: 30
+    minSize: 1
+    maxSize: 1
+    iam:
+      withAddonPolicies:
+        ebs: true
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+iam:
+  withOIDC: true

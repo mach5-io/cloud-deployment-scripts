@@ -1,0 +1,111 @@
+mach5ImagePullSecret:
+  createSecretResources: false
+  dockerconfigjson: "CHANGE_ME"
+keycloak:
+  master:
+    username: ""
+    password: ""
+metadatadb:
+  name: "postgres"
+  host: "postgresdb"
+  port: "5432"
+  sslmode: "disable"
+  user: "postgres"
+  password: ""
+  externalPostgresdb: false
+  pvc:
+    storageclass: "gp2"
+mediator:
+  replicaCount: 1
+  existingClaim: false
+  cstoreSegmentCache:
+    enabled: true
+  loglevel: info
+  useGcpInstanceMetadata: false
+  cstoreCachefs:
+    rcachepvsize: "483183820800" #450GB
+    pvsize: "485331304448" #452GB
+  resourceLimit:
+    enabled: false
+cstorecacheserver:
+  env:
+    enableEviction: true
+pvc:
+  storageclass: "gp2"
+teleportcollector:
+  useGcpInstanceMetadata: "false"
+mediatorwarehousecontroller:
+  customnode:
+    enabled: false
+    workerresource:
+      mediator:
+        memory: "59055800320" # 55GB
+    headresource:
+      ir:
+        memory: "2147483648" # 2GB
+      os:
+        memory: "25769803776" # 24GB
+      osd:
+        memory: "1073741824" # 1GB
+      mdx:
+        memory: "1073741824" # 1GB
+mediatorcompactorcontroller:
+  cstoreCachefs:
+    rcachepvsize: "10737418240" #10GB
+    pvsize: "12884901888" #12GB
+  compaction_resources:
+    #enabled: true
+    max_compaction_memory:
+      enabled: true
+      value: "536870912" # 512M
+mediatoringestorcontroller:
+  cstoreCachefs:
+    mountroot: /cachefs
+    rcachepv: /ingest
+    rcachepvsize: "10737418240" #10GB
+    pvsize: "12884901888" #12GB
+  ingestion_resources:
+    limits:
+      cpu:
+        enabled: false
+        value: "1000m"
+      memory:
+        enabled: true
+        value: "4096Mi"
+    requests:
+      cpu:
+        enabled: false
+        value: "500m"
+      memory:
+        enabled: false
+        value: "1024Mi"
+nginx:
+  loadBalancerInternal: "true"
+  loadBalancerSourceRanges:
+    - "0.0.0.0/0"
+  awsElbHttps:
+    enabled: false
+    sslCertARN: arn:aws:iam::user:server-certificate/id # Add ACM's ARN
+argo-workflows:
+  # -- Keep CRDs on chart uninstall
+  crds:
+    install: true
+    keep: false
+prometheus:
+  enabled: false
+  retentionSize: "8GB"
+  server:
+    persistentVolume:
+      enabled: true
+      size: 10Gi
+    service:
+      type: LoadBalancer
+      loadBalancerSourceRanges: ["0.0.0.0/0"] # Change this to your CIDR
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+serviceAccount:
+  create: false
+  name: mach5-sa-aws
+mdserver:
+  metering:
+    enabled: true

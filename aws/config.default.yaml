@@ -1,0 +1,138 @@
+mach5-config: 
+  # Namespace to be used for installing Mach5 Search helmcharts
+  namespace: mach5
+  # Mach5 Search release version to be installed
+  version: 4.7.0-snapshot-30253cb
+  # Helm release name for the Mach5 Search Installation
+  release-name: m5s
+  # Password for the PostgreSQL database used for storing the metadata. If unspecified, a password value will be generated.
+  db-password: 
+
+cluster-config:
+  # AWS EKS Mach5 Cluster Name
+  name: mach5-cluster
+  # AWS region for resources. Make sure to update the VPC zone section with the corresponding value
+  region: us-east-1
+  # S3 bucket to use as Mach5 Search store. The bucket is created with relevant permissions to be used by Mach5 Search. 
+  s3-bucket: mach5-search-bucket
+  # Mach5 prefix for resources
+  prefix: m5
+  vpc:
+    # CIDR Block for AWS VPC
+    cidr-block: 10.0.0.0/16
+    # CIDR Block for Cluster
+    cluster-service-cidr: 10.0.0.0/24
+    route-table:
+      # CIDR block for private subnet route table
+      public: 0.0.0.0/0
+      # CIDR block for public subnet route table
+      private: 0.0.0.0/0
+    subnet:
+      private:
+        # CIDR block for private subnet 1
+        cidr1: 10.0.0.0/19
+        # Availability zone for private subnet 1
+        zone1: us-east-1a
+        # CIDR block for private subnet 2
+        cidr2: 10.0.32.0/19
+        # Availability zone for private subnet 2
+        zone2: us-east-1b
+      public:
+        #CIDR block for public subnet 1
+        cidr1: 10.0.64.0/19
+        # Availability zone for public subnet 1
+        zone1: us-east-1a
+        # CIDR block for public subnet 2
+        cidr2: 10.0.96.0/19
+        # Availability zone for public subnet 2
+        zone2: us-east-1b
+  # Name of the Kubernetes service account associated with the cluster
+  service_account_name: mach5-cluster-sa
+  ebs:
+    # Add-on version for the AWS EBS CSI driver
+    addon-version: v1.44.0-eksbuild.1
+    storageclass:
+      # Name of the gp3 storage class
+      name: gp3
+      # Storage class provisioner for the gp3 storage class
+      provisioner: ebs.csi.aws.com
+  node-groups:
+    warehouse-head:
+      # EC2 machine type to be used for warehouse-head node-group
+      instance-type: t3a.2xlarge
+      # Node capacity type to be used for warehouse-head node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for warehouse-head node-group
+      desired-size: 0
+      # Minimum number of nodes used for warehouse-head node-group
+      min-size: 0
+      # Maximum number of nodes used for warehouse-head node-group
+      max-size: 10
+    warehouse-worker:
+      # EC2 machine type to be used for warehouse-worker node-group
+      instance-type: i4i.2xlarge
+      # Type of Amazon Machine Image (AMI) associated with the Warehouse worker Node Group. Default=AL2_x86_64. For ARM AMIs, use AL2_ARM_64
+      ami-type: AL2_x86_64
+      # Node capacity type to be used for warehouse-worker node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for warehouse-worker node-group
+      desired-size: 0
+      # Minimum number of nodes used for warehouse-worker node-group
+      min-size: 0
+      # Maximum number of nodes used for warehouse-worker node-group
+      max-size: 10
+    ingestor:
+      # EC2 machine type to be used for ingestor node-group
+      instance-type: m6id.2xlarge
+      # Type of Amazon Machine Image (AMI) associated with the Ingestor Node Group. Default=AL2_x86_64. For ARM AMIs, use AL2_ARM_64
+      ami-type: AL2_x86_64
+      # Node capacity type to be used for ingestor node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for ingestor node-group
+      desired-size: 0
+      # Minimum number of nodes used for ingestor node-group
+      min-size: 0
+      # Maximum number of nodes used for ingestor node-group
+      max-size: 10
+    compactor:
+      # EC2 machine type to be used for compactor node-group
+      instance-type: m6id.2xlarge
+      # Type of Amazon Machine Image (AMI) associated with the Compactor Node Group. Default=AL2_x86_64. For ARM AMIs, use AL2_ARM_64
+      ami-type: AL2_x86_64
+      # Node capacity type to be used for compactor node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for compactor node-group
+      desired-size: 0
+      # Minimum number of nodes used for compactor node-group
+      min-size: 0
+      # Maximum number of nodes used for compactor node-group
+      max-size: 10
+    main:
+      # EC2 machine type to be used for main node-group
+      instance-type: m6a.2xlarge
+      # Node capacity type to be used for main node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for main node-group
+      desired-size: 1
+      # Minimum number of nodes used for main node-group
+      min-size: 1
+      # Maximum number of nodes used for main node-group
+      max-size: 1
+    ccs:
+      # EC2 machine type to be used for cstorecacheserver node-group
+      instance-type: c5ad.large
+      # Node capacity type to be used for cstorecacheserver node-group (ON_DEMAND/SPOT)
+      capacity: ON_DEMAND
+      # Desired number of nodes used for cstorecacheserver node-group
+      desired-size: 1
+      # Minimum number of nodes used for cstorecacheserver node-group
+      min-size: 1
+      # Maximum number of nodes used for cstorecacheserver node-group
+      max-size: 1
+    settings:
+      # Maximum size of the log file for a container before it is rotated
+      log-max-size: 20Mi
+      # Maximum number of rotated log files to keep for each container
+      log-max-files: 2
+
+  
