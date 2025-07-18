@@ -3,7 +3,7 @@
 source $M5_BASE_DIR/scripts/common.sh
 
 check_tool terraform
-check_version terraform "terraform version" 1 12
+check_version terraform "terraform version" 1 5
 
 initialize_env "multinode"
 
@@ -20,7 +20,7 @@ terraform_install() {
     terraform init
 
     echo "Running terraform apply..."
-    sleep 5
+    sleep 1
 
     terraform apply -var-file="mach5.tfvars" -auto-approve 
 
@@ -31,12 +31,7 @@ terraform_install() {
     cd $M5_BASE_DIR
 }
 
-if [ -f "$TR_FLAG_FILE" ]; then
-    echo "Terraform setup previously completed. Skipping."
-else
-    terraform_install
-    touch "$TR_FLAG_FILE"
-fi
+terraform_install
 
 update_kubeconfig
 
