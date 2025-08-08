@@ -1,0 +1,154 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: mach5-cluster
+  region: us-west-2
+  version: "1.33"
+
+managedNodeGroups:
+  - name: mach5-nodes
+    labels:
+      mach5-main-role : "true"
+    tags:
+      "k8s.io/cluster-autoscaler/mach5-cluster": "owned"
+      "k8s.io/cluster-autoscaler/enabled": "true"
+      "k8s.io/cluster-autoscaler/node-template/label/group": "mach5-nodes"
+      "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role": "true"
+    instanceType: m6a.2xlarge
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 1
+    iam:
+      withAddonPolicies:
+        ebs: true
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  - name: mach5-ccs-nodes
+    labels: 
+      mach5-ccs-role: "true"
+    tags:
+      Name: mach5-ccs-nodes
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-ccs-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-ccs-role: "true"
+    instanceType: c5ad.large
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 1
+    iam:
+      withAddonPolicies:
+          ebs: true
+      attachPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+          - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+          - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  - name: mach5-ingestor-nodes
+    labels: { mach5-ingestor-role: "true"}
+    tags:
+      Name: mach5-ingestor-nodes
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-ingestor-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role: "true"
+    instanceType: m6id.2xlarge
+    desiredCapacity: 0
+    minSize: 0
+    maxSize: 10
+    iam:
+      withAddonPolicies:
+          ebs: true
+          autoScaler: true
+      attachPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+          - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+          - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+  
+  - name: mach5-compactor-nodes
+    labels: { mach5-compactor-role: "true"}
+    tags:
+      Name: mach5-compactor-nodes
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-compactor-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-compactor-role: "true"
+    instanceType: m6id.2xlarge
+    desiredCapacity: 0
+    minSize: 0
+    maxSize: 10
+    iam:
+      withAddonPolicies:
+          ebs: true
+          autoScaler: true
+      attachPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+          - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+          - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  - name: mach5-warehouse-nodes
+    labels: { mach5-warehouse-worker-role: "true" }
+    tags:
+      Name: mach5-warehouse-nodes
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-warehouse-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-worker-role: "true"
+    instanceType: i4i.2xlarge
+    desiredCapacity: 0
+    minSize: 0
+    maxSize: 10
+    iam:
+      withAddonPolicies:
+          ebs: true
+          autoScaler: true
+      attachPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+          - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+          - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  - name: mach5-warehouse-head-nodes
+    labels: { mach5-warehouse-head-role: "true" }
+    tags:
+      Name: mach5-warehouse-head-nodes
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-warehouse-head-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-head-role: "true"
+    instanceType: t3a.2xlarge
+    desiredCapacity: 0
+    minSize: 0
+    maxSize: 10
+    iam:
+      withAddonPolicies:
+          ebs: true
+          autoScaler: true
+      attachPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+          - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+          - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+          - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+          - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+iam:
+  withOIDC: true
