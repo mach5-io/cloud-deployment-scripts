@@ -6,6 +6,15 @@ metadata:
   region: us-west-2
   version: "1.33"
 
+vpc:
+  id: "vpc-id" # Change the VPC ID
+  subnets:
+    private:
+      us-west-2a:
+        id: subnet-id1 # Change the Subnet ID
+      us-west-2b:
+        id: subnet-id2 # Change the Subnet ID
+
 managedNodeGroups:
   - name: mach5-nodes
     labels:
@@ -34,6 +43,9 @@ managedNodeGroups:
         - arn:aws:iam::aws:policy/AmazonEC2FullAccess
         - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
 
   - name: mach5-ccs-nodes
     labels: 
@@ -63,6 +75,9 @@ managedNodeGroups:
           - arn:aws:iam::aws:policy/AmazonEC2FullAccess
           - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
 
   - name: mach5-ingestor-nodes
     labels: 
@@ -93,6 +108,9 @@ managedNodeGroups:
           - arn:aws:iam::aws:policy/AmazonEC2FullAccess
           - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
   
   - name: mach5-compactor-nodes
     labels: 
@@ -123,6 +141,9 @@ managedNodeGroups:
           - arn:aws:iam::aws:policy/AmazonEC2FullAccess
           - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
 
   - name: mach5-warehouse-nodes
     labels: 
@@ -153,6 +174,9 @@ managedNodeGroups:
           - arn:aws:iam::aws:policy/AmazonEC2FullAccess
           - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
 
   - name: mach5-warehouse-head-nodes
     labels: 
@@ -183,6 +207,9 @@ managedNodeGroups:
           - arn:aws:iam::aws:policy/AmazonEC2FullAccess
           - arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+    privateNetworking: true
+    subnets:
+      - subnet-id1 # Change the Subnet ID
 
 iam:
   withOIDC: true
