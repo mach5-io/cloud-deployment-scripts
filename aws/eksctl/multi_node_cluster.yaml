@@ -11,10 +11,10 @@ managedNodeGroups:
     labels:
       mach5-main-role : "true"
     tags:
-      "k8s.io/cluster-autoscaler/mach5-cluster": "owned"
-      "k8s.io/cluster-autoscaler/enabled": "true"
-      "k8s.io/cluster-autoscaler/node-template/label/group": "mach5-nodes"
-      "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role": "true"
+      k8s.io/cluster-autoscaler/mach5-cluster: "owned"
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-main-role: "true"
     instanceType: m6a.2xlarge
     propagateASGTags: true
     desiredCapacity: 1
