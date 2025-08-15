@@ -83,7 +83,7 @@ resource "aws_iam_role_policy_attachment" "mach5-AmazonEC2FullAccess" {
 
 module "eks_managed_node_group" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -162,7 +162,7 @@ resource "aws_autoscaling_group_tag" "main-nodes" {
 
 module "eks_managed_node_group_ingestor" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-ingestor-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -232,7 +232,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 module "eks_managed_node_group_ingestor_ondemand" {
   count = var.spot_fallback_to_ondemand ? 1 : 0
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-ondemand-ingest-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -323,7 +323,7 @@ resource "aws_autoscaling_group_tag" "ingestor-nodes-demand" {
 
 module "eks_managed_node_group_compactor" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-compactor-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -393,7 +393,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 module "eks_managed_node_group_compactor_ondemand" {
   count = var.spot_fallback_to_ondemand ? 1 : 0
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-ondemand-compact-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -484,7 +484,7 @@ resource "aws_autoscaling_group_tag" "compactor-nodes-demand" {
 
 module "eks_managed_node_group_warehouse" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-warehouse-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -563,7 +563,7 @@ resource "aws_autoscaling_group_tag" "warehouse-nodes" {
 
 module "eks_managed_node_group_warehouse_head" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-warehouse-head-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
@@ -641,7 +641,7 @@ resource "aws_autoscaling_group_tag" "warehouse-head-nodes" {
 
 module "eks_managed_node_group_ccs" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
-
+  version = "20.37.2"
   name            = "${var.prefix}-ccs-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
