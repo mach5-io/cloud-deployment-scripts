@@ -1,0 +1,14 @@
+extraArgs:
+  logtostderr: true
+  stderrthreshold: info
+  v: 4
+  ignore-daemonsets-utilization: true
+  skip-nodes-with-system-pods: false
+  daemonset-eviction-for-empty-nodes: true
+  daemonset-eviction-for-occupied-nodes: true
+  skip-nodes-with-local-storage: false
+  scale-down-delay-after-add: 2m
+  scale-down-unneeded-time: 2m
+  unremovable-node-recheck-timeout: 2m
+  expander: priority
+  max-node-provision-time: 2m

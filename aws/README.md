@@ -8,12 +8,18 @@ This repository provides the resources and instructions required to deploy Mach5
 
 - Subscribe to Mach5 Search on the AWS Marketplace: https://aws.amazon.com/marketplace/pp/prodview-4cv3wvxzbopfm
 
-## Steps to setup Mach5 Search EKS deployment using Terraform
+## Steps to setup Mach5 Search EKS deployment
 
 - Create a copy of `config.default.yaml` and name it `config.yaml`. This file includes all the configuration parameters required for setting up the cluster. Review the list of parameters to see if you need to modify any of them.
-- To provision the infrastructure and install Mach5 Search, run:
+- To provision the infrastructure and install Mach5 Search, run following command
+
+### Deployment using Terraform
 ````
 bash setup-mach5-cluster.sh
+````
+### Deployment using eksctl
+````
+bash setup-mach5-cluster.sh eksctl
 ````
 
 This will take around 30-40 minutes to bring up the complete infrastructure. Once the installation is successful, you can access:

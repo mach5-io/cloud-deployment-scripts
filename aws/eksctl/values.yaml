@@ -1,6 +1,6 @@
 mach5ImagePullSecret:
   createSecretResources: false
-  dockerconfigjson: ""
+  dockerconfigjson: "CHANGE_ME"
 keycloak:
   master:
     username: ""
@@ -11,17 +11,11 @@ metadatadb:
   port: "5432"
   sslmode: "disable"
   user: "postgres"
-  password: 
+  password: ""
   externalPostgresdb: false
   pvc:
     storageclass: "gp2"
-  emptydir:
-    enabled: false
-  nodeassignment:
-    enabled: true
 mediator:
-  nodeassignment:
-    enabled: true
   replicaCount: 1
   existingClaim: false
   cstoreSegmentCache:
@@ -29,8 +23,8 @@ mediator:
   loglevel: info
   useGcpInstanceMetadata: false
   cstoreCachefs:
-    rcachepvsize: "8589934592" #8GB
-    pvsize: "8589934592" #8GB
+    rcachepvsize: "483183820800" #450GB
+    pvsize: "485331304448" #452GB
   resourceLimit:
     enabled: false
 cstorecacheserver:
@@ -39,75 +33,53 @@ cstorecacheserver:
 pvc:
   storageclass: "gp2"
 teleportcollector:
-  nodeassignment:
-    enabled: true
   useGcpInstanceMetadata: "false"
 mediatorwarehousecontroller:
-  nodeassignment:
-    enabled: true
-  workernodeselector:
-    enabled: true
-  headnodeselector:
-    enabled: true
   customnode:
     enabled: true
     workerresource:
       mediator:
-        memory: "4294967296" # 4GB
+        memory: "59055800320" # 55GB
     headresource:
       ir:
-        memory: "1073741824" # 1GB
+        memory: "2147483648" # 2GB
       os:
-        memory: "4294967296" # 4GB
+        memory: "25769803776" # 24GB
       osd:
         memory: "1073741824" # 1GB
       mdx:
         memory: "1073741824" # 1GB
 mediatorcompactorcontroller:
-  nodeassignment:
-    enabled: true
-  compactornodeselector:
-    enabled: true
   cstoreCachefs:
-    rcachepvsize: "1073741824" #1GB
-    pvsize: "1288490189" #1.2GB
+    rcachepvsize: "10737418240" #10GB
+    pvsize: "12884901888" #12GB
   compaction_resources:
     #enabled: true
     max_compaction_memory:
       enabled: true
       value: "536870912" # 512M
-    limits:
-      memory:
-        enabled: true
-        value: "2048Mi"
-  delete_compaction_resources:
-    limits:
-      memory:
-        enabled: true
-        value: "2048Mi"
-  finalize_compaction_resources:
-    limits:
-      memory:
-        enabled: true
-        value: "2048Mi"
 mediatoringestorcontroller:
-  nodeassignment:
-    enabled: true
-  ingestornodeselector:
-    enabled: true
   cstoreCachefs:
     mountroot: /cachefs
     rcachepv: /ingest
-    rcachepvsize: "1073741824" #1GB
-    pvsize: "1288490189" #1.2GB
+    rcachepvsize: "10737418240" #10GB
+    pvsize: "12884901888" #12GB
   ingestion_resources:
     limits:
+      cpu:
+        enabled: false
+        value: "1000m"
       memory:
         enabled: true
-        value: "2048Mi"
+        value: "4096Mi"
+    requests:
+      cpu:
+        enabled: false
+        value: "500m"
+      memory:
+        enabled: false
+        value: "1024Mi"
 nginx:
-  nodeassignment:
-    enabled: true
   loadBalancerInternal: "true"
   loadBalancerSourceRanges:
     - "0.0.0.0/0"
@@ -131,52 +103,9 @@ prometheus:
       loadBalancerSourceRanges: ["0.0.0.0/0"] # Change this to your CIDR
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+serviceAccount:
+  create: false
+  name: mach5-sa-aws
 mdserver:
   metering:
     enabled: true
-  nodeassignment:
-    enabled: true
-meteringserver:
-  nodeassignment:
-    enabled: true
-metricsserver:
-  nodeassignment:
-    enabled: true
-msearchserver:
-  nodeassignment:
-    enabled: true
-cstorecacheserver:
-  nodeassignment:
-    enabled: true
-  pvc:
-    name: "ccs-ssd"
-    size: "10Gi" # 10GB 
-cstoretxnrelayserver:
-  nodeassignment:
-    enabled: true
-dataexplorer:
-  nodeassignment:
-    enabled: true
-mediatormaterializedviewcontroller:
-  nodeassignment:
-    enabled: true
-  cstoreCachefs:
-    rcachepv: /rcache
-    rcachepvsize: "6442450944" #6GB
-    pvsize: "6657199309" #6.2GB
-  mv_resources:
-    limits:
-      memory:
-        enabled: true
-        value: 2048Mi
-  ingestornodeselector:
-    enabled: true
-otel:
-  nodeassignment:
-    enabled: true
-mediatorindexrouter:
-  nodeassignment:
-    enabled: true
-serviceAccount:
-  create: false
-  name: 

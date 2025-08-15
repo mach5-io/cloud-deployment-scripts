@@ -5,6 +5,9 @@ source $M5_BASE_DIR/scripts/common.sh
 check_tool eksctl
 check_version eksctl "eksctl version" 0 207
 
+check_tool sed
+check_version sed "sed --version" 4 9
+
 initialize_env "eksctl"
 
 update_eksctl_config 
@@ -16,14 +19,14 @@ if [ -f "$EKSCTL_FLAG_FILE" ]; then
 else
     echo "Creating EKS cluster using eksctl..."
 
-    eksctl create cluster -f $M5_CLUSTER_BASE_DIR/eksctl/cluster.yaml
+    eksctl create cluster -f $M5_CLUSTER_BASE_DIR/eksctl/multi_node_cluster.yaml
 
     if [ $? -ne 0 ]; then
         echo "❌ eksctl cluster creation failed."
         exit 1
     fi
 
-    eksctl create addon --name aws-ebs-csi-driver --cluster $CLUSTER_NAME --region $REGION
+#    eksctl create addon --name aws-ebs-csi-driver --cluster $CLUSTER_NAME --region $REGION
 
     eksctl create iamserviceaccount  --region "$REGION" --cluster $CLUSTER_NAME  --name $SERVICE_ACCOUNT_NAME  --namespace $NAMESPACE  --attach-policy-arn arn:aws:iam::aws:policy/AWSMarketplaceMeteringFullAccess  --attach-policy-arn arn:aws:iam::aws:policy/AWSMarketplaceMeteringRegisterUsage  --attach-policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --approve
 
@@ -31,6 +34,10 @@ else
 fi
 
 update_kubeconfig
+
+helm repo add autoscaler https://kubernetes.github.io/autoscaler
+
+helm install m5-cas autoscaler/cluster-autoscaler --set 'autoDiscovery.clusterName'=$CLUSTER_NAME -f $M5_CLUSTER_BASE_DIR/eksctl/values_ca.yaml
 
 export HELM_EXPERIMENTAL_OCI=1
 aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
@@ -45,7 +52,11 @@ S3_EXISTS=$(aws s3api head-bucket --bucket "$S3_BUCKET" 2>&1 || true)
 
 if echo "$S3_EXISTS" | grep -q 'Not Found'; then
     echo "Creating S3 bucket: $S3_BUCKET in region $REGION"
-    aws s3api create-bucket --bucket "$S3_BUCKET" --create-bucket-configuration LocationConstraint="$REGION"  
+    if [ "$REGION" = "us-east-1" ]; then
+        aws s3api create-bucket --bucket "$S3_BUCKET" --region "$REGION"
+    else
+        aws s3api create-bucket --bucket "$S3_BUCKET" --create-bucket-configuration LocationConstraint="$REGION"  
+    fi    
     if [ $? -ne 0 ]; then
         echo "❌ eksctl cluster creation failed."
         exit 1

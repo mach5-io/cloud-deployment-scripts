@@ -23,6 +23,9 @@ tool_missing() {
         curl)
             message="curl 8.5+"
             ;;
+        sed)
+            message="sed 4.9+"
+            ;;
         *)
             message="required tool"
             ;;
@@ -44,7 +47,6 @@ check_version() {
 
     local version
     version=$($version_cmd 2>/dev/null | grep -oE '[0-9]+\.[0-9]+' | head -1)
-
     if [[ -z "$version" ]]; then
         echo "Could not determine version of $tool"
         tool_missing "$tool"
@@ -91,11 +93,11 @@ update_eksctl_config() {
     export service_account=$(yq eval '.cluster-config.service_account_name' $M5_CONFIG_FILE)
     yq -i '.serviceAccount.name = strenv(service_account)' $EKSCTL_BASE/values.yaml
 
-    export cluster_name=$(yq eval '.cluster-config.name' $M5_CONFIG_FILE)
-    yq -i '.metadata.name = strenv(cluster_name)' $EKSCTL_BASE/cluster.yaml
+    export m5_cluster_name=$(yq eval '.cluster-config.name' $M5_CONFIG_FILE)
+    sed -i "s/mach5-cluster/$m5_cluster_name/g" $EKSCTL_BASE/multi_node_cluster.yaml
 
     export region=$(yq eval '.cluster-config.region' $M5_CONFIG_FILE)
-    yq -i '.metadata.region = strenv(region)' $EKSCTL_BASE/cluster.yaml
+    yq -i '.metadata.region = strenv(region)' $EKSCTL_BASE/multi_node_cluster.yaml
 
 }
 
@@ -152,7 +154,7 @@ setup_folders() {
         mv $M5_TEMP_CONFIG_FILE  $M5_CLUSTER_BASE_DIR/config.yaml 
 
         local mode="$1"  
-        if [ "$mode" = "single" ]; then
+        if [ "$mode" = "eksctl" ]; then
             cp -R $M5_BASE_DIR/eksctl $M5_CLUSTER_BASE_DIR/
         else
             cp -R $M5_BASE_DIR/terraform $M5_CLUSTER_BASE_DIR/
