@@ -2,7 +2,7 @@ mach5-config:
   # Namespace to be used for installing Mach5 Search helmcharts
   namespace: mach5
   # Mach5 Search release version to be installed
-  version: 4.8.0-snapshot-fd38f70
+  version: 5.1.0-rc1-7cd7af7
   # Helm release name for the Mach5 Search Installation
   release-name: m5s
   # Password for the PostgreSQL database used for storing the metadata. If unspecified, a password value will be generated.
