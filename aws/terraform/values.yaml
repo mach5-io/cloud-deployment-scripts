@@ -35,6 +35,8 @@ pvc:
 teleportcollector:
   useGcpInstanceMetadata: "false"
 mediatorwarehousecontroller:
+  workerresource: "aws.c6id.8xlarge" # must be a value from warehouse/machines-mapping.yaml
+  headresource: "aws.i3.xlarge" # must be a value from warehouse/machines-mapping.yaml
   customnode:
     enabled: false
     workerresource:
