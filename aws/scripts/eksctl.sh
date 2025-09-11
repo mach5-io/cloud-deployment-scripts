@@ -6,7 +6,7 @@ check_tool eksctl
 check_version eksctl "eksctl version" 0 207
 
 check_tool sed
-check_version sed "sed --version" 4 9
+check_version sed "sed --version" 4 8
 
 initialize_env "eksctl"
 
