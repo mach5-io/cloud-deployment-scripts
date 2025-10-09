@@ -4,10 +4,10 @@ locals {
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-nodes"
     "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role" = "true"
   }
-  eks_asg_tag_list_ccs_nodes = {
-    "Name" = "${var.prefix}-ccs-nodes"
-    "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-ccs-nodes"
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-ccs-role" = "true"
+  eks_asg_tag_list_fdb_nodes = {
+    "Name" = "${var.prefix}-fdb-nodes"
+    "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-fdb-nodes"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role" = "true"
   }
   eks_asg_tag_list_ingestor_nodes = {
     "Name" = "${var.prefix}-ingestor-nodes"
@@ -639,21 +639,21 @@ resource "aws_autoscaling_group_tag" "warehouse-head-nodes" {
   }
 }
 
-module "eks_managed_node_group_ccs" {
+module "eks_managed_node_group_fdb" {
   source = "terraform-aws-modules/eks/aws//modules/eks-managed-node-group"
   version = "20.37.2"
-  name            = "${var.prefix}-ccs-nodes"
+  name            = "${var.prefix}-fdb-nodes"
   cluster_name    = aws_eks_cluster.mach5-cluster.name
   subnet_ids = [aws_subnet.private-us-east-1a.id]
   create_iam_role = false
   iam_role_arn = aws_iam_role.mach5-nodes.arn
   create = true
   cluster_service_cidr = var.cluster_service_cidr
-  min_size     = var.ccs_node_min_size
-  max_size     = var.ccs_node_max_size
-  desired_size = var.ccs_node_desired_size
-  capacity_type  = var.ccs_node_capacity_type
-  instance_types = var.ccs_node_instance_type
+  min_size     = var.fdb_node_min_size
+  max_size     = var.fdb_node_max_size
+  desired_size = var.fdb_node_desired_size
+  capacity_type  = var.fdb_node_capacity_type
+  instance_types = var.fdb_node_instance_type
 
   update_config = {
     max_unavailable = 1
@@ -663,11 +663,6 @@ module "eks_managed_node_group_ccs" {
 
   ami_id = data.aws_ami.x86_ami.id
   enable_bootstrap_user_data = true
-
-  pre_bootstrap_user_data = <<-EOT
-    #!/usr/bin/env bash
-    setup-local-disks raid0
-  EOT
 
   post_bootstrap_user_data = <<-EOT
     #!/usr/bin/env bash
@@ -688,14 +683,14 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
   EOT
 
   labels = {
-    mach5-ccs-role = "true"
+    mach5-fdb-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
-    "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-ccs-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-ccs-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-fdb-nodes",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role" = "true"
   }
 
   depends_on = [
@@ -706,9 +701,9 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
     aws_iam_role_policy_attachment.mach5-AmazonEC2FullAccess,
   ]
 }
-resource "aws_autoscaling_group_tag" "ccs-nodes" {
-  for_each               = local.eks_asg_tag_list_ccs_nodes
-  autoscaling_group_name = module.eks_managed_node_group_ccs.node_group_autoscaling_group_names.0
+resource "aws_autoscaling_group_tag" "fdb-nodes" {
+  for_each               = local.eks_asg_tag_list_fdb_nodes
+  autoscaling_group_name = module.eks_managed_node_group_fdb.node_group_autoscaling_group_names.0
 
   tag {
     key                 = each.key
