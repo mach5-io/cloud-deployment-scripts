@@ -47,24 +47,20 @@ managedNodeGroups:
     subnets:
       - subnet-id1 # Change the Subnet ID
 
-  - name: mach5-ccs-nodes
+  - name: mach5-fdb-nodes
     labels: 
-      mach5-ccs-role: "true"
+      mach5-fdb-role: "true"
     tags:
-      Name: mach5-ccs-nodes
+      Name: mach5-fdb-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
-      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-ccs-nodes"
-      k8s.io/cluster-autoscaler/node-template/label/mach5-ccs-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/group: "mach5-fdb-nodes"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role: "true"
     instanceType: c5ad.large
     propagateASGTags: true
     desiredCapacity: 1
     minSize: 1
     maxSize: 1
-    preBootstrapCommands:
-      - |
-        #!/usr/bin/env bash
-        setup-local-disks raid0
     iam:
       withAddonPolicies:
           ebs: true
