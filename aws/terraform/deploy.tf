@@ -134,7 +134,7 @@ resource "helm_release" "mach5-release-gcp" {
 
 resource "null_resource" "download_chart" {
   provisioner "local-exec" {
-    command = "aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com; helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-search --version ${var.mach5_helm_chart_version} "
+    command = "aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com; helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-io --version ${var.mach5_helm_chart_version} "
   }
   triggers = {
     always_run = timestamp()
@@ -144,7 +144,7 @@ resource "null_resource" "download_chart" {
 resource "helm_release" "mach5-release-ecr" {
   count = var.use_ecr ? 1 : 0
 
-  chart      = "./mach5-search-${var.mach5_helm_chart_version}.tgz"
+  chart      = "./mach5-io-${var.mach5_helm_chart_version}.tgz"
   name        = var.mach5_helm_release_name
   namespace   = var.namespace
   values = [

@@ -35,11 +35,11 @@ update_kubeconfig
 export HELM_EXPERIMENTAL_OCI=1
 aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
 
-helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-search --version $MACH5_VERSION
+helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-io --version $MACH5_VERSION
 
-helm upgrade --install -n $NAMESPACE  --create-namespace $HELM_RELEASE_NAME mach5-search-$MACH5_VERSION.tgz -f $M5_CLUSTER_BASE_DIR/eksctl/values.yaml 
+helm upgrade --install -n $NAMESPACE  --create-namespace $HELM_RELEASE_NAME mach5-io-$MACH5_VERSION.tgz -f $M5_CLUSTER_BASE_DIR/eksctl/values.yaml 
 
-rm mach5-search-$MACH5_VERSION.tgz
+rm mach5-io-$MACH5_VERSION.tgz
 
 S3_EXISTS=$(aws s3api head-bucket --bucket "$S3_BUCKET" 2>&1 || true)
 
