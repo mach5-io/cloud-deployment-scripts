@@ -8,7 +8,7 @@ This repository provides the resources and instructions required to deploy Mach5
 
 ## Prerequisites
 
-- Subscribe to Mach5 Search on the AWS Marketplace: https://aws.amazon.com/marketplace/pp/prodview-fxnbtlbxqnghu
+- Subscribe to Mach5 Search on the AWS Marketplace: https://aws.amazon.com/marketplace/pp/prodview-nm2gab2klmxie
 
 ## Steps to setup Mach5 Search EKS deployment
 
