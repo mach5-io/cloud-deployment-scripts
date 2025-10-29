@@ -401,34 +401,34 @@ variable "warehouse_head_node_instance_type" {
   default     = ["t3a.2xlarge"]
 }
 
-variable "ccs_node_capacity_type" {
+variable "fdb_node_capacity_type" {
   type        = string
   description = "Node capacity type to be used for cstorecacheserver node-group (ON_DEMAND/SPOT)"
   default     = "ON_DEMAND"
 }
 
-variable "ccs_node_desired_size" {
+variable "fdb_node_desired_size" {
   type        = number
   description = "Desired number of nodes used for cstorecacheserver node-group"
   default     = 1
 }
 
-variable "ccs_node_min_size" {
+variable "fdb_node_min_size" {
   type        = number
   description = "Minimum number of nodes used for cstorecacheserver node-group"
   default     = 1
 }
 
-variable "ccs_node_max_size" {
+variable "fdb_node_max_size" {
   type        = number
   description = "Maximum number of nodes used for cstorecacheserver node-group"
   default     = 1
 }
 
-variable "ccs_node_instance_type" {
+variable "fdb_node_instance_type" {
   type        = list(string)
   description = "EC2 machine type to be used for cstorecacheserver node-group"
-  default     = ["c5ad.large"]
+  default     = ["c5a.xlarge"]
 }
 
 variable "cache_proxy_version" {
@@ -464,5 +464,5 @@ variable "storageclass_provisioner" {
 variable "service_account_name" {
   description = "Name of the Kubernetes service account"
   type        = string
-  default = "mach5-cluster-ram-sa"
+  default = "mach5-cluster-sa"
 }

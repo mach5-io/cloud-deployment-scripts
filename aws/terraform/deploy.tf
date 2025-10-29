@@ -102,6 +102,21 @@ resource "kubernetes_namespace" "mach5" {
     name = var.namespace
   }
 }
+ 
+resource "kubectl_manifest" "fdb_clusters" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbclusters.yaml")
+  depends_on = [kubernetes_namespace.mach5 ]
+}
+
+resource "kubectl_manifest" "fdb_backups" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbbackups.yaml")
+  depends_on = [ kubectl_manifest.fdb_clusters ]
+}
+
+resource "kubectl_manifest" "fdb_restores" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbrestores.yaml")
+  depends_on = [ kubectl_manifest.fdb_backups ]
+}
 
 resource "helm_release" "cm_ecr" {
   count = var.use_ecr ? 1 : 0
@@ -134,7 +149,7 @@ resource "helm_release" "mach5-release-gcp" {
 
 resource "null_resource" "download_chart" {
   provisioner "local-exec" {
-    command = "aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com; helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-search --version ${var.mach5_helm_chart_version} "
+    command = "aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com; helm pull oci://709825985650.dkr.ecr.us-east-1.amazonaws.com/mach5-software/mach5-io/mach5-search --version ${var.mach5_helm_chart_version} "
   }
   triggers = {
     always_run = timestamp()
