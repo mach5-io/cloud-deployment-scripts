@@ -102,6 +102,21 @@ resource "kubernetes_namespace" "mach5" {
     name = var.namespace
   }
 }
+ 
+resource "kubectl_manifest" "fdb_clusters" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbclusters.yaml")
+  depends_on = [kubernetes_namespace.mach5 ]
+}
+
+resource "kubectl_manifest" "fdb_backups" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbbackups.yaml")
+  depends_on = [ kubectl_manifest.fdb_clusters ]
+}
+
+resource "kubectl_manifest" "fdb_restores" {
+  yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbrestores.yaml")
+  depends_on = [ kubectl_manifest.fdb_backups ]
+}
 
 resource "helm_release" "cm_ecr" {
   count = var.use_ecr ? 1 : 0
