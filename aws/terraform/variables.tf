@@ -422,13 +422,13 @@ variable "fdb_node_min_size" {
 variable "fdb_node_max_size" {
   type        = number
   description = "Maximum number of nodes used for cstorecacheserver node-group"
-  default     = 1
+  default     = 5
 }
 
 variable "fdb_node_instance_type" {
   type        = list(string)
   description = "EC2 machine type to be used for cstorecacheserver node-group"
-  default     = ["c5a.xlarge"]
+  default     = ["m6a.4xlarge"]
 }
 
 variable "cache_proxy_version" {

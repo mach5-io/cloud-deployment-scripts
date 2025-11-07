@@ -19,11 +19,13 @@ managedNodeGroups:
   - name: mach5-nodes
     labels:
       mach5-main-role : "true"
+      mach5-search-role: "true"
     tags:
       "k8s.io/cluster-autoscaler/mach5-cluster": "owned"
       "k8s.io/cluster-autoscaler/enabled": "true"
       "k8s.io/cluster-autoscaler/node-template/label/group": "mach5-nodes"
       "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role": "true"
+      "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role": "true"
     instanceType: m6a.2xlarge
     propagateASGTags: true
     desiredCapacity: 1
@@ -50,12 +52,14 @@ managedNodeGroups:
   - name: mach5-fdb-nodes
     labels: 
       mach5-fdb-role: "true"
+      mach5-search-role: "true"
     tags:
       Name: mach5-fdb-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-fdb-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-search-role: "true"
     instanceType: c5ad.large
     propagateASGTags: true
     desiredCapacity: 1
@@ -78,12 +82,14 @@ managedNodeGroups:
   - name: mach5-ingestor-nodes
     labels: 
       mach5-ingestor-role: "true"
+      mach5-search-role: "true"
     tags:
       Name: mach5-ingestor-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-ingestor-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-search-role: "true"
     instanceType: m6id.2xlarge
     propagateASGTags: true
     desiredCapacity: 0
@@ -111,12 +117,14 @@ managedNodeGroups:
   - name: mach5-compactor-nodes
     labels: 
       mach5-compactor-role: "true"
+      mach5-search-role: "true"
     tags:
       Name: mach5-compactor-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-compactor-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-compactor-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-search-role: "true"
     instanceType: m6id.2xlarge
     propagateASGTags: true
     desiredCapacity: 0
@@ -144,12 +152,14 @@ managedNodeGroups:
   - name: mach5-warehouse-nodes
     labels: 
       mach5-warehouse-worker-role: "true"
+      mach5-search-role: "true"
     tags:
       Name: mach5-warehouse-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-warehouse-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-worker-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-search-role: "true"
     instanceType: i4i.2xlarge
     propagateASGTags: true
     desiredCapacity: 0
@@ -177,12 +187,14 @@ managedNodeGroups:
   - name: mach5-warehouse-head-nodes
     labels: 
       mach5-warehouse-head-role: "true"
+      mach5-search-role: "true"
     tags:
       Name: mach5-warehouse-head-nodes
       k8s.io/cluster-autoscaler/enabled: "true"
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-warehouse-head-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-head-role: "true"
+      k8s.io/cluster-autoscaler/node-template/label/mach5-search-role: "true"
     instanceType: t3a.2xlarge
     propagateASGTags: true
     desiredCapacity: 0

@@ -1,6 +1,6 @@
 mach5ImagePullSecret:
   createSecretResources: false
-  dockerconfigjson: "CHANGE_ME"
+  dockerconfigjson: "CHANGE_ME
 keycloak:
   master:
     username: ""
