@@ -131,13 +131,15 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 
   labels = {
     mach5-main-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-main-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -211,13 +213,15 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
   
   labels = {
     mach5-ingestor-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-ingestor-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -281,13 +285,15 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
   
   labels = {
     mach5-ingestor-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-ondemand-ingest-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-ingestor-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -372,6 +378,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
   
   labels = {
     mach5-compactor-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
@@ -379,6 +386,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-compactor-nodes",
     "k8s.io/cluster-autoscaler/node-template/label/mach5-compactor-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -442,6 +450,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
   
   labels = {
     mach5-compactor-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
@@ -449,6 +458,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-ondemand-compact-nodes",
     "k8s.io/cluster-autoscaler/node-template/label/mach5-compactor-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -533,6 +543,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 
   labels = {
     mach5-warehouse-worker-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
@@ -540,6 +551,7 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-warehouse-nodes",
     "k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-worker-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -611,13 +623,15 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 
   labels = {
     mach5-warehouse-head-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-warehouse-head-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-head-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-head-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [
@@ -684,13 +698,15 @@ Environment="KUBELET_EXTRA_ARGS=--container-log-max-size=${var.log_max_size} --c
 
   labels = {
     mach5-fdb-role = "true"
+    mach5-search-role = "true"
   }
 
   tags = {
     "k8s.io/cluster-autoscaler/${aws_eks_cluster.mach5-cluster.name}" = "owned",
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/node-template/label/group" = "${var.prefix}-fdb-nodes",
-    "k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role" = "true"
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-fdb-role" = "true",
+    "k8s.io/cluster-autoscaler/node-template/label/mach5-search-role" = "true"
   }
 
   depends_on = [

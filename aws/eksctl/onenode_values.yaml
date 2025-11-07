@@ -5,6 +5,8 @@ keycloak:
   master:
     username: ""
     password: ""
+  nodeassignment:
+        nodeSelector:
 metadatadb:
   name: "postgres"
   host: "postgresdb"
@@ -18,7 +20,16 @@ metadatadb:
   emptydir:
     enabled: false
   nodeassignment:
-    enabled: true
+        nodeSelector:
+ubbagent:
+    nodeassignment:
+        nodeSelector:
+flux:
+  nodeassignment:
+      nodeSelector:
+fdbreconciler:
+  nodeassignment:
+    nodeSelector:
 mediator:
   nodeassignment:
     enabled: true
@@ -33,22 +44,20 @@ mediator:
     pvsize: "8589934592" #8GB
   resourceLimit:
     enabled: false
-cstorecacheserver:
-  env:
-    enableEviction: true
 pvc:
   storageclass: "gp2"
 teleportcollector:
   nodeassignment:
-    enabled: true
+    nodeSelector:
+mediator:
   useGcpInstanceMetadata: "false"
 mediatorwarehousecontroller:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   workernodeselector:
-    enabled: true
+    nodeSelector:
   headnodeselector:
-    enabled: true
+    nodeSelector:
   customnode:
     enabled: true
     workerresource:
@@ -65,9 +74,9 @@ mediatorwarehousecontroller:
         memory: "1073741824" # 1GB
 mediatorcompactorcontroller:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   compactornodeselector:
-    enabled: true
+    nodeSelector:
   cstoreCachefs:
     rcachepvsize: "1073741824" #1GB
     pvsize: "1288490189" #1.2GB
@@ -92,9 +101,9 @@ mediatorcompactorcontroller:
         value: "2048Mi"
 mediatoringestorcontroller:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   ingestornodeselector:
-    enabled: true
+    nodeSelector:
   cstoreCachefs:
     mountroot: /cachefs
     rcachepv: /ingest
@@ -107,7 +116,7 @@ mediatoringestorcontroller:
         value: "2048Mi"
 nginx:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   loadBalancerInternal: "true"
   loadBalancerSourceRanges:
     - "0.0.0.0/0"
@@ -135,31 +144,28 @@ mdserver:
   metering:
     enabled: true
   nodeassignment:
-    enabled: true
+    nodeSelector:
 meteringserver:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 metricsserver:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 msearchserver:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 cstorecacheserver:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   pvc:
     name: "ccs-ssd"
     size: "10Gi" # 10GB 
-cstoretxnrelayserver:
-  nodeassignment:
-    enabled: true
 dataexplorer:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 mediatormaterializedviewcontroller:
   nodeassignment:
-    enabled: true
+    nodeSelector:
   cstoreCachefs:
     rcachepv: /rcache
     rcachepvsize: "6442450944" #6GB
@@ -170,20 +176,23 @@ mediatormaterializedviewcontroller:
         enabled: true
         value: 2048Mi
   ingestornodeselector:
-    enabled: true
+    nodeSelector:
 otel:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 mediatorindexrouter:
   nodeassignment:
-    enabled: true
+    nodeSelector:
 foundationdb:
     enableOperator: true
     clusterName: fdb-txn-cluster
     clusterFilePath: /etc/foundationdb/fdb.cluster
     enableFdbCluster: true
+    operator:
+        nodeassignment:
+            nodeSelector:
     spec:
-        version: 7.1.26
+        version: 7.3.70
         automationOptions:
             replacements:
                 enabled: true
@@ -213,8 +222,8 @@ foundationdb:
                             - name: foundationdb
                               resources:
                                   limits:
-                                      cpu: 100m
-                                      memory: 256Mi
+                                      cpu: 500m
+                                      memory: 512Mi
                                   requests:
                                       cpu: 100m
                                       memory: 128Mi
@@ -223,8 +232,8 @@ foundationdb:
                             - name: foundationdb-kubernetes-sidecar
                               resources:
                                   limits:
-                                      cpu: 100m
-                                      memory: 256Mi
+                                      cpu: 500m
+                                      memory: 512Mi
                                   requests:
                                       cpu: 100m
                                       memory: 128Mi
@@ -234,8 +243,8 @@ foundationdb:
                             - name: foundationdb-kubernetes-init
                               resources:
                                   limits:
-                                      cpu: 100m
-                                      memory: 256Mi
+                                      cpu: 500m
+                                      memory: 512Mi
                                   requests:
                                       cpu: 100m
                                       memory: 128Mi
@@ -252,6 +261,7 @@ foundationdb:
             enableLivenessProbe: true
             enableReadinessProbe: false
         useExplicitListenAddress: true
+
 serviceAccount:
   create: false
   name: 
