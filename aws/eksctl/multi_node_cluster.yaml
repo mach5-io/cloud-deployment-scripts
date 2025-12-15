@@ -48,7 +48,7 @@ managedNodeGroups:
     propagateASGTags: true
     desiredCapacity: 1
     minSize: 1
-    maxSize: 1
+    maxSize: 5
     iam:
       withAddonPolicies:
           ebs: true
