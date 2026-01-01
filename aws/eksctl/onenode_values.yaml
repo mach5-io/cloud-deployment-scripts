@@ -157,6 +157,9 @@ cstoretxnrelayserver:
 dataexplorer:
   nodeassignment:
     enabled: true
+axonserver:
+  nodeassignment:
+    enabled: true
 mediatormaterializedviewcontroller:
   nodeassignment:
     enabled: true
