@@ -1,5 +1,5 @@
 mach5ImagePullSecret:
-  createSecretResources: false
+  createSecretResources: true
   dockerconfigjson: "CHANGE_ME"
 metadatadb:
   name: "postgres"
@@ -102,11 +102,11 @@ prometheus:
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 serviceAccount:
-  create: false
+  create: true
   name: mach5-sa-aws
 license:
-  metered: true
-  token: "CHANGE_ME" # only if metered=false
+  metered: false
+  token: "CHANGE_ME"
 oidc:
   enabled: false
 keycloak:

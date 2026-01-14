@@ -56,7 +56,7 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.cluster.token
 }
 
-resource "kubernetes_namespace" "cm" {
+resource "kubernetes_namespace_v1" "cm" {
   metadata {
     name = "cert-manager"
   }
@@ -65,7 +65,7 @@ resource "kubernetes_namespace" "cm" {
 resource "helm_release" "cm_gcp" {
   count = var.use_ecr ? 0 : 1
   name             = "cm"
-  namespace        = kubernetes_namespace.cm.metadata[0].name
+  namespace        = kubernetes_namespace_v1.cm.metadata[0].name
   create_namespace = false
   chart            = "cert-manager"
   repository       = "https://charts.jetstack.io"
@@ -76,7 +76,7 @@ resource "helm_release" "cm_gcp" {
   provider   = helm.gcp
 }
 
-resource "kubernetes_namespace" "cache-proxy" {
+resource "kubernetes_namespace_v1" "cache-proxy" {
   metadata {
     name = "cache-proxy"
   }
@@ -86,7 +86,7 @@ resource "helm_release" "mach5-cache-proxy" {
   count = var.use_ecr ? 0 : 1
   create_namespace = false
   name        = "m5-cache"
-  namespace   = kubernetes_namespace.cache-proxy.metadata[0].name
+  namespace   = kubernetes_namespace_v1.cache-proxy.metadata[0].name
   repository  = var.mach5_helm_repository
   version     = var.cache_proxy_version
   chart       = "mach5-cache-proxy"
@@ -97,7 +97,7 @@ resource "helm_release" "mach5-cache-proxy" {
   provider   = helm.gcp
 }
 
-resource "kubernetes_namespace" "mach5" {
+resource "kubernetes_namespace_v1" "mach5" {
   metadata {
     name = var.namespace
   }
@@ -105,7 +105,7 @@ resource "kubernetes_namespace" "mach5" {
  
 resource "kubectl_manifest" "fdb_clusters" {
   yaml_body = file("${path.module}/crds/apps.foundationdb.org_foundationdbclusters.yaml")
-  depends_on = [kubernetes_namespace.mach5 ]
+  depends_on = [kubernetes_namespace_v1.mach5 ]
 }
 
 resource "kubectl_manifest" "fdb_backups" {
@@ -121,7 +121,7 @@ resource "kubectl_manifest" "fdb_restores" {
 resource "helm_release" "cm_ecr" {
   count = var.use_ecr ? 1 : 0
   name             = "cm"
-  namespace        = kubernetes_namespace.cm.metadata[0].name
+  namespace        = kubernetes_namespace_v1.cm.metadata[0].name
   create_namespace = false
   chart            = "cert-manager"
   repository       = "https://charts.jetstack.io"

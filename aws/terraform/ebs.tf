@@ -35,7 +35,7 @@ resource "aws_eks_addon" "ebs-csi" {
   }
 }
 
-resource "kubernetes_storage_class" "gp3" {
+resource "kubernetes_storage_class_v1" "gp3" {
   provider = kubernetes.ebs
 
   metadata {
