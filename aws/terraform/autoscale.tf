@@ -38,7 +38,7 @@ resource "helm_release" "autoscale-release_ecr" {
   provider   = helm.ecr
 }
 
-resource "kubernetes_config_map" "configmap_cluster_autoscaler_priority_expander" {
+resource "kubernetes_config_map_v1" "configmap_cluster_autoscaler_priority_expander" {
   count = var.spot_fallback_to_ondemand ? 1 : 0
   metadata {
     name = "cluster-autoscaler-priority-expander"

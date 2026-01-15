@@ -19,6 +19,24 @@
 terraform init
 terraform apply
 ````
+Once the infrastructure is created, run the following command to configure kubectl so that you can connect to an Amazon EKS cluster locally and install helm-charts in the cluster:
+````
+aws eks --region us-east-1 update-kubeconfig --name <cluster-name>
+````
+Sample: 
+````
+aws eks --region us-east-1 update-kubeconfig --name mach5-cluster
+````
+
+#### License Setup
+A license token is required to install Mach5. Please follow the instructions at https://mach5.io/docs/licensetokensetupguide  and provide the requested details to the Mach5 Administrator to obtain your license.
+Once you receive the token, update this token into the license.token parameter in the values.yaml file.
+Run the following commands to update the Mach5 installation with the license token:
+````
+terraform apply
+Type yes to proceed with the update
+````
+Once this update is complete, you are ready to initialize and access Mach5 Search.
 
 - This could take anywhere around 20-30 minutes to bring up the infrastructure and install the Mach5 Search charts.
 

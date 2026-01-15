@@ -1,6 +1,6 @@
 variable "use_ecr" {
  type = bool
- default = true
+ default = false
  description = "Enable Mach5 deployment from Aamzon ECR "
 }
 

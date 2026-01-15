@@ -36,7 +36,7 @@ resource "aws_iam_role_policy_attachment" "s3_full_access" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-resource "kubernetes_service_account" "marketplace_metering" {
+resource "kubernetes_service_account_v1" "marketplace_metering" {
   metadata {
     name      = var.service_account_name
     namespace = var.namespace
