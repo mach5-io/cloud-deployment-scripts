@@ -159,7 +159,7 @@ managedNodeGroups:
       k8s.io/cluster-autoscaler/mach5-cluster: "owned"
       k8s.io/cluster-autoscaler/node-template/label/group: "mach5-warehouse-head-nodes"
       k8s.io/cluster-autoscaler/node-template/label/mach5-warehouse-head-role: "true"
-    instanceType: t3a.2xlarge
+    instanceType: m6id.2xlarge
     propagateASGTags: true
     desiredCapacity: 0
     minSize: 0

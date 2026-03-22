@@ -72,8 +72,8 @@ initialize_env() {
     check_tool curl
 
     # Check versions
-    check_version yq "yq --version" 4        
-    check_version kubectl "kubectl version" 1 31        
+    check_version yq "yq --version" 4
+    check_version kubectl "kubectl version" 1 31
     check_version aws "aws --version" 2 9
     check_version curl "curl --version" 7 81
 
@@ -175,7 +175,7 @@ prepare_configfile() {
     cp $M5_BASE_CONFIG_FILE $M5_BASE_DIR/.m5.config.yaml
     export M5_TEMP_CONFIG_FILE=$M5_BASE_DIR/.m5.config.yaml
 
-    s3_postfix=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+    s3_postfix=$(head -c 1M /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head  -1)
     s3_bucket_temp=$(yq '.cluster-config.s3-bucket' $M5_TEMP_CONFIG_FILE)
     export S3_BUCKET="$s3_bucket_temp-$s3_postfix"
     yq eval ".cluster-config.s3-bucket = \"$S3_BUCKET\"" -i "$M5_TEMP_CONFIG_FILE"
