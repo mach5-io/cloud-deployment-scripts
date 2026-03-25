@@ -175,7 +175,7 @@ prepare_configfile() {
     cp $M5_BASE_CONFIG_FILE $M5_BASE_DIR/.m5.config.yaml
     export M5_TEMP_CONFIG_FILE=$M5_BASE_DIR/.m5.config.yaml
 
-    s3_postfix=$(head -c 1M /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head  -1)
+    s3_postfix=$(head -c 1M /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -1)
     s3_bucket_temp=$(yq '.cluster-config.s3-bucket' $M5_TEMP_CONFIG_FILE)
     export S3_BUCKET="$s3_bucket_temp-$s3_postfix"
     yq eval ".cluster-config.s3-bucket = \"$S3_BUCKET\"" -i "$M5_TEMP_CONFIG_FILE"
@@ -183,7 +183,7 @@ prepare_configfile() {
     password=$(yq eval '.mach5-config.db-password // ""' $M5_TEMP_CONFIG_FILE)
 
     if [ -z "$password" ]; then
-        temp_db_password=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 16 | head -n 1)
+        temp_db_password=$(head -c 1M /dev/urandom | tr -dc 'a-z0-9' | fold -w 16 | head -1)
         yq eval ".mach5-config.db-password = \"$temp_db_password\"" -i "$M5_TEMP_CONFIG_FILE"
     fi
 }

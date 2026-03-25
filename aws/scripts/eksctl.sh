@@ -38,7 +38,7 @@ update_kubeconfig
 
 helm repo add autoscaler https://kubernetes.github.io/autoscaler
 
-helm install m5-cas autoscaler/cluster-autoscaler --set 'autoDiscovery.clusterName'=$CLUSTER_NAME -f $M5_CLUSTER_BASE_DIR/eksctl/values_ca.yaml
+helm install m5-cas autoscaler/cluster-autoscaler --version 9.34.1 --set 'autoDiscovery.clusterName'=$CLUSTER_NAME -f $M5_CLUSTER_BASE_DIR/eksctl/values_ca.yaml
 
 export HELM_EXPERIMENTAL_OCI=1
 aws ecr get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin 709825985650.dkr.ecr.us-east-1.amazonaws.com
