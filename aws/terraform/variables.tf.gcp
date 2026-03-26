@@ -30,7 +30,7 @@ variable "igw_id" {
 
 variable "mach5_helm_chart_version" {
  type = string
- default = "5.10.0"
+ default = "6.1.0"
  description = "Specify the exact helm chart version to install"
 }
 
@@ -422,7 +422,7 @@ variable "fdb_node_min_size" {
 variable "fdb_node_max_size" {
   type        = number
   description = "Maximum number of nodes used for cstorecacheserver node-group"
-  default     = 1
+  default     = 5
 }
 
 variable "fdb_node_instance_type" {

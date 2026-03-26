@@ -3,7 +3,7 @@ resource "helm_release" "autoscale-release_gcp" {
   name        = "autoscale-release"
   namespace   = "default"
   repository  = "https://kubernetes.github.io/autoscaler"
-  #version     = "9.34.1"
+  version     = "9.34.1"
   chart       = "cluster-autoscaler"
   create_namespace = false
   values = [
@@ -23,7 +23,7 @@ resource "helm_release" "autoscale-release_ecr" {
   name        = "autoscale-release"
   namespace   = "default"
   repository  = "https://kubernetes.github.io/autoscaler"
-  #version     = "9.34.1"
+  version     = "9.34.1"
   chart       = "cluster-autoscaler"
   create_namespace = false
   values = [
