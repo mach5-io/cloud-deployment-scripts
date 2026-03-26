@@ -30,7 +30,7 @@ variable "igw_id" {
 
 variable "mach5_helm_chart_version" {
  type = string
- default = "5.10.0"
+ default = "6.1.0"
  description = "Specify the exact helm chart version to install"
 }
 
