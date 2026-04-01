@@ -60,6 +60,11 @@ fi
 
 load_config
 
+CLUSTER_SUBNET_ID=${CLUSTER_SUBNET_ID:-""}
+CLUSTER_VNET_RESOURCE_GROUP=${CLUSTER_VNET_RESOURCE_GROUP:-""}
+CLUSTER_VNET_NAME=${CLUSTER_VNET_NAME:-""}
+CLUSTER_SUBNET_NAME=${CLUSTER_SUBNET_NAME:-""}
+
 if [[ "$VERBOSE" == true ]]; then
   set -x
 fi
@@ -108,7 +113,23 @@ if [[ -z "$AKS_SUBNET_ID_RESOLVED" && "$cluster_exists" == true && -n "$node_rg"
   fi
 fi
 
+if [[ -n "$AKS_SUBNET_ID_RESOLVED" ]]; then
+  if [[ -z "$CLUSTER_VNET_RESOURCE_GROUP" ]]; then
+    CLUSTER_VNET_RESOURCE_GROUP=$(printf '%s' "$AKS_SUBNET_ID_RESOLVED" | awk -F/ '{for(i=1;i<=NF;i++) if($i=="resourceGroups"){print $(i+1); break}}')
+  fi
+  if [[ -z "$CLUSTER_VNET_NAME" ]]; then
+    CLUSTER_VNET_NAME=$(printf '%s' "$AKS_SUBNET_ID_RESOLVED" | awk -F/ '{for(i=1;i<=NF;i++) if($i=="virtualNetworks"){print $(i+1); break}}')
+  fi
+  if [[ -z "$CLUSTER_SUBNET_NAME" ]]; then
+    CLUSTER_SUBNET_NAME=$(printf '%s' "$AKS_SUBNET_ID_RESOLVED" | awk -F/ '{for(i=1;i<=NF;i++) if($i=="subnets"){print $(i+1); break}}')
+  fi
+fi
+
 remove_service_endpoint() {
+  if [[ -z "$CLUSTER_VNET_RESOURCE_GROUP" || -z "$CLUSTER_VNET_NAME" || -z "$CLUSTER_SUBNET_NAME" ]]; then
+    log "WARN" "Skipping subnet service endpoint cleanup; VNet/subnet identifiers are not available."
+    return 0
+  fi
   local endpoints
   mapfile -t endpoints < <(az network vnet subnet show \
     --resource-group "$CLUSTER_VNET_RESOURCE_GROUP" \

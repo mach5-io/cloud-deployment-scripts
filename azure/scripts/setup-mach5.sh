@@ -5,6 +5,28 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 LOG_PREFIX="$(basename "$0")"
 
+check_helm_major() {
+  if ! command -v helm >/dev/null 2>&1; then
+    printf "ERROR: Helm 3 is required but 'helm' was not found in PATH.\n" >&2
+    exit 1
+  fi
+
+  local version=""
+  version=$(helm version --short 2>/dev/null || true)
+  if [[ -z "$version" ]]; then
+    version=$(helm version --template '{{.Version}}' 2>/dev/null || true)
+  fi
+
+  local major=""
+  major=$(printf '%s' "$version" | sed -n 's/^v\([0-9]\+\).*/\1/p' | head -n 1)
+  if [[ "$major" != "3" ]]; then
+    printf "ERROR: Helm 3 is required; detected %s.\n" "${version:-unknown}" >&2
+    exit 1
+  fi
+}
+
+check_helm_major
+
 usage() {
   cat <<EOF
 Usage: $0 [-v|--verbose] [--dry-run] [--config PATH]
@@ -73,7 +95,7 @@ fi
 
 log_prefix "Starting full Mach5 deployment (infra + Helm)."
 
-./scripts/deploy-mach5.sh "${ALL_ARGS[@]}"
+./scripts/mach5-infrastructure.sh "${ALL_ARGS[@]}"
 deploy_exit=$?
 if [[ "$deploy_exit" -eq 10 ]]; then
   log_prefix "License token missing; stopping before Helm installs."
@@ -85,5 +107,8 @@ fi
 
 log_prefix "Infrastructure deployment completed; moving to Helm installs."
 
-./scripts/install-mach5-helm.sh "${ALL_ARGS[@]}"
-log_prefix "Helm installs completed."
+./scripts/mach5-helm.sh "${ALL_ARGS[@]}"
+printf "\n"
+printf "========================= SETUP COMPLETE =========================\n"
+printf "Mach5 infrastructure and Helm installs finished successfully.\n"
+printf "==================================================================\n\n"

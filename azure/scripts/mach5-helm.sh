@@ -154,12 +154,29 @@ print_port_forward_help() {
     return 0
   fi
 
+  :
+}
+
+print_final_summary() {
   printf "\n"
-  log "INFO" "Port-forward is running in the background (PID ${PORT_FORWARD_PID})."
-  log "INFO" "Stop it with: kill ${PORT_FORWARD_PID}"
-  log "INFO" "Recreate it with:"
-  printf "kubectl -n mach5 port-forward svc/%s %s:%s\n" \
-    "$MACH5_NGINX_SERVICE_NAME" "$MACH5_STORE_LOCAL_PORT" "$MACH5_NGINX_PORT"
+  printf "======================= IMPORTANT: NEXT STEPS =======================\n"
+  printf "Helm components deployed. Verify with:\n"
+  printf "  helm list --all -n mach5\n\n"
+
+  if [[ -n "${PORT_FORWARD_PID}" ]]; then
+    printf "Port-forward is running in the background (PID %s).\n" "${PORT_FORWARD_PID}"
+    printf "Stop it with:\n"
+    printf "  kill %s\n\n" "${PORT_FORWARD_PID}"
+    printf "Recreate it with:\n"
+    printf "  kubectl -n mach5 port-forward svc/%s %s:%s\n\n" \
+      "$MACH5_NGINX_SERVICE_NAME" "$MACH5_STORE_LOCAL_PORT" "$MACH5_NGINX_PORT"
+  fi
+
+  printf "Mach5 Search Dashboards URL:\n"
+  printf "  http://localhost:%s/warehouse/default/m5warehouse/dashboards/\n" "${MACH5_STORE_LOCAL_PORT}"
+  printf "OpenSearch-compatible API URL:\n"
+  printf "  http://localhost:%s/warehouse/default/m5warehouse/opensearch/\n" "${MACH5_STORE_LOCAL_PORT}"
+  printf "======================================================================\n\n"
 }
 
 extract_store_id() {
@@ -342,8 +359,4 @@ create_store
 create_store_route
 create_warehouse
 
-print_port_forward_help
-
-log "INFO" "Helm components deployed; verify 'helm list --all -n mach5' for m5s."
-log "INFO" "Mach5 Search Dashboards URL: http://localhost:${MACH5_STORE_LOCAL_PORT}/warehouse/default/m5warehouse/dashboards/"
-log "INFO" "OpenSearch-compatible API URL: http://localhost:${MACH5_STORE_LOCAL_PORT}/warehouse/default/m5warehouse/opensearch/"
+print_final_summary
