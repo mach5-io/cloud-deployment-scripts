@@ -8,6 +8,16 @@ This repo contains shell scripts to provision Mach5 infrastructure on AKS and in
 - `jq` insalled.
 - `helm` installed.
 - A Mach5 reader key JSON file at `reader-key.json` (or update `MACH5_READER_KEY_PATH`).
+Azure vCPU quota (East US): based on the current `configs/mach5.env` minimums, the baseline requires 24 vCPUs total.
+
+| Nodepool | VM Size | Desired Count | vCPUs Each | Total vCPUs |
+| --- | --- | --- | --- | --- |
+| main | Standard_D4s_v4 | 2 | 4 | 8 |
+| fdbnode | Standard_DS3_v2 | 2 | 4 | 8 |
+| ingestnode | Standard_D2ads_v6 | 0 | 2 | 0 |
+| compactnode | Standard_D2ads_v6 | 0 | 2 | 0 |
+| whworkernode | Standard_D4ads_v6 | 1 | 4 | 4 |
+| whheadnode | Standard_D4ads_v6 | 1 | 4 | 4 |
 
 ## Configure Before You Run
 
@@ -60,7 +70,7 @@ Some Helm values files include placeholders marked as `CHANGE_ME`. Update these 
 
 - `values/values_aks.yaml`
   - `imagePullSecrets.dockerconfigjson` (image pull secret for Mach5 registry)
-  - `license.token`
+  - `license.token` (Change this only when the cluster and nodepools are created and the script prompts you to update this)
   - `metadatadb.name`
   - `metadatadb.host`
   - `metadatadb.port`
