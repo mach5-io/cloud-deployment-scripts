@@ -1,0 +1,2 @@
+image: amazon/dynamodb-local:2.5.2
+serviceAccount: default

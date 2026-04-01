@@ -1,0 +1,9 @@
+image: minio/minio
+mcImage: minio/mc
+rootUser: admin
+rootPassword: password
+pvc:
+  size: 50Gi
+buckets:
+  - locals3-it
+serviceAccount: default

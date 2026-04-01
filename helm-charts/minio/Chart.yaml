@@ -1,0 +1,5 @@
+apiVersion: v2
+name: minio
+description: Standalone MinIO S3-compatible object store for IT environments
+type: application
+version: 1.0.0
