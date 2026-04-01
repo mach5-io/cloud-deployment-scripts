@@ -1,0 +1,70 @@
+# kubectl --namespace <namespace> exec -it <postgresdb-pod> -- \
+# psql -h localhost -U postgres --password -p 5432
+{{- if not .Values.pvc.existingClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.pvc.name }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  {{- if .Values.pvc.storageclass }}
+  storageClassName: {{ .Values.pvc.storageclass }}
+  {{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.pvc.size }}
+---
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresdb
+  labels:
+    app: postgresdb
+spec:
+  selector:
+    matchLabels:
+      app: postgresdb
+  template:
+    metadata:
+      labels:
+        app: postgresdb
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount }}
+      containers:
+        - name: postgresdb
+          image: {{ .Values.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pvc/"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: PGPASSWORD
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: {{ .Values.pvc.name }}
+      volumes:
+        - name: {{ .Values.pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.pvc.existingClaim | default (printf "%s-%s" .Release.Name .Values.pvc.name) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresdb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+  selector:
+    app: postgresdb

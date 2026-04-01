@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount }}
+      initContainers:
+        - name: create-buckets
+          image: {{ .Values.mcImage }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until /usr/bin/mc alias set local http://localhost:9000 {{ .Values.rootUser }} {{ .Values.rootPassword }}; do
+                echo '...waiting for minio...' && sleep 1
+              done
+              {{- range .Values.buckets }}
+              /usr/bin/mc mb --ignore-existing local/{{ . }}
+              {{- end }}
+              sleep infinity
+          restartPolicy: Always
+      containers:
+        - name: minio
+          image: {{ .Values.image }}
+          args: ["server", "/data", "--console-address", ":9001"]
+          env:
+            - name: MINIO_ROOT_USER
+              value: {{ .Values.rootUser | quote }}
+            - name: MINIO_ROOT_PASSWORD
+              value: {{ .Values.rootPassword | quote }}
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: {{ .Values.pvc.size | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9001
+      targetPort: 9001
+  selector:
+    app: minio
