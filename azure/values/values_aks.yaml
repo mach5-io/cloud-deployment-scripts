@@ -1,0 +1,83 @@
+mach5ImagePullSecret:
+  dockerconfigjson: "CHANGE_ME"
+
+mdserver:
+  metering:
+      enabled: false
+
+metadatadb: #Azure Database for PostgreSQL flexible server details
+  name: "postgres" #CHANGE_ME
+  host: "postgresdb" #CHANGE_ME
+  port: "5432" #CHANGE_ME
+  sslmode: "disable" 
+  user: "postgres" #CHANGE_ME
+  password: "password" #CHANGE_ME
+  externalPostgresdb: false
+  pvc:
+    storageclass: "managed"
+
+pvc:
+  storageclass: "managed"
+
+mediator:
+  replicaCount: 1
+  existingClaim: false
+  cstoreSegmentCache:
+    enabled: true
+  loglevel: info
+  useGcpInstanceMetadata: false
+  cstoreCachefs:
+    rcachepvsize: "161061273600" #150GB
+    pvsize: "163208757248" #152GB
+  resourceLimit:
+    enabled: false
+
+mediatorcompactorcontroller:
+  cstoreCachefs:
+    rcachepvsize: "85899345920" #80GB
+    pvsize: "88046829568" #82GB
+  compaction_resources:
+    #enabled: true
+    max_compaction_memory: 
+      enabled: true
+      value: "536870912" # 512M
+
+mediatoringestorcontroller:
+  cstoreCachefs:
+    mountroot: /cachefs
+    rcachepv: /ingest
+    rcachepvsize: "85899345920" #80GB
+    pvsize: "88046829568" #82GB
+  ingestion_resources:
+    limits:
+      memory:
+        enabled: true
+        value: "4096Mi"
+
+mediatorwarehousecontroller:
+  customnode:
+    enabled: true
+    workerresource:
+      mediator:
+        memory: "12884901888" #12GB
+    headresource:
+      ir:
+        memory: "1073741824" #1GB
+      os:
+        memory: "8589934592" #8GB
+      osd:
+        memory: "1073741824" #1GB
+      mdx:
+        memory: "2147483648" #2GB
+
+nginx:
+  azure:
+    enabled: true
+    loadBalancerInternal: "true"
+
+prometheus:
+  enabled: false
+
+license:
+  metered: false
+  token: "CHANGE_ME"
